@@ -12,6 +12,7 @@ func main() {
 	frameLen := .1
 	size := 100.0
 	gravity := 9.81
+	drag := -.999
 	parts := 50
 	dump := true
 
@@ -20,7 +21,7 @@ func main() {
 	flag.IntVar(&parts, "parts", parts, "particle count")
 	flag.Parse()
 
-	spc := newSpace(size, frameLen, gravity)
+	spc := newSpace(size, frameLen, gravity, drag)
 	ps := newSimpleParticles(dir, parts, spc.termination)
 
 	if err := spc.run(ps, frames, dump); err != nil {

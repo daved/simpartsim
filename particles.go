@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -11,6 +12,7 @@ import (
 type particle interface {
 	increment(time, gravity float64)
 	processCollisions(origin, termination point)
+	drag(time, drag float64)
 	String() string
 }
 
@@ -69,29 +71,55 @@ func (p *simpleParticle) reflect(a, b float64) float64 {
 func (p *simpleParticle) processCollisions(origin, termination point) {
 	if p.point.x < origin.x {
 		p.point.x = p.reflect(p.point.x, origin.x)
-		p.vector.x *= -.6
+		p.vector.x *= -.7
 	}
 	if p.point.x > termination.x {
 		p.point.x = p.reflect(p.point.x, termination.x)
-		p.vector.x *= -.6
+		p.vector.x *= -.7
 	}
 
 	if p.point.y < origin.y {
 		p.point.y = p.reflect(p.point.y, origin.y)
-		p.vector.y *= -.6
+		p.vector.y *= -.5
+
+		if p.point.y < .4 && p.vector.y-p.point.y < 1.2 {
+			p.point.y = 0
+			p.vector.y *= 0
+		}
 	}
 	if p.point.y > termination.y {
 		p.point.y = p.reflect(p.point.y, termination.y)
-		p.vector.y *= -.6
+		p.vector.y *= -.9
 	}
 
 	if p.point.z < origin.z {
 		p.point.z = p.reflect(p.point.z, origin.z)
-		p.vector.z *= -.6
+		p.vector.z *= -.7
 	}
 	if p.point.z > termination.z {
 		p.point.z = p.reflect(p.point.z, termination.z)
-		p.vector.z *= -.6
+		p.vector.z *= -.7
+	}
+}
+
+// drag ...
+func (p *simpleParticle) drag(time, drag float64) {
+	if p.point.y != 0 && p.vector.y != 0 {
+		return
+	}
+
+	if math.Abs(p.vector.x) < 4 {
+		p.vector.x = 0
+	}
+	if math.Abs(p.vector.z) < 4 {
+		p.vector.z = 0
+	}
+
+	if p.vector.x != 0 {
+		p.vector.x *= drag * time
+	}
+	if p.vector.z != 0 {
+		p.vector.z *= drag * time
 	}
 }
 

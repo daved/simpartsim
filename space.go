@@ -2,17 +2,18 @@ package main
 
 // space ...
 type space struct {
-	origin, termination point
-	gravity, frameLen   float64
+	origin, termination     point
+	frameLen, gravity, drag float64
 }
 
 // newSpace ...
-func newSpace(size, frameLen, gravity float64) *space {
+func newSpace(size, frameLen, gravity, drag float64) *space {
 	return &space{
 		origin:      makePoint(0, 0, 0),
 		termination: makePoint(size, size, size),
 		frameLen:    frameLen,
 		gravity:     gravity,
+		drag:        drag,
 	}
 }
 
@@ -22,6 +23,7 @@ func (s *space) tick(ps particles) {
 	for k := range d {
 		d[k].increment(s.frameLen, s.gravity)
 		d[k].processCollisions(s.origin, s.termination)
+		d[k].drag(s.frameLen, s.drag)
 	}
 }
 
