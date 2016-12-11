@@ -2,6 +2,11 @@ package simpartsim
 
 import "strconv"
 
+const (
+	// CoordsFieldNames ...
+	CoordsFieldNames = "X Axis,Y Axis,Z Axis"
+)
+
 // Coords ...
 type Coords struct {
 	x, y, z float64
