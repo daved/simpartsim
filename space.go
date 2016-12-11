@@ -132,7 +132,7 @@ func (s *SimpleSpace) processCollisions(p Particle, origin, termination Coords) 
 		newPt.y = s.reflect(pt.y, origin.y)
 		newV.y = v.y * -.5
 
-		if newPt.y < .4 && newV.y-newPt.y < 1 {
+		if newPt.y < .4 && newV.y-newPt.y < 1.2 {
 			newPt.y = 0
 			newV.y = 0
 		}
