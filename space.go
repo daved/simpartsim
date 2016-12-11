@@ -8,6 +8,29 @@ type Space interface {
 	Termination() Coords
 }
 
+// SimpleSpaceOptions ...
+type SimpleSpaceOptions struct {
+	FrameLen float64
+	Size     float64
+	Gravity  float64
+	Drag     float64
+}
+
+func (o *SimpleSpaceOptions) normalize() {
+	if o.FrameLen == 0 {
+		o.FrameLen = .1
+	}
+	if o.Size == 0 {
+		o.Size = 100.0
+	}
+	if o.Gravity == 0 {
+		o.Gravity = 9.81
+	}
+	if o.Drag == 0 {
+		o.Drag = 9.0
+	}
+}
+
 // SimpleSpace ...
 type SimpleSpace struct {
 	origin, termination     Coords
@@ -15,13 +38,15 @@ type SimpleSpace struct {
 }
 
 // NewSimpleSpace ...
-func NewSimpleSpace(size, frameLen, gravity, drag float64) *SimpleSpace {
+func NewSimpleSpace(opts SimpleSpaceOptions) *SimpleSpace {
+	opts.normalize()
+
 	return &SimpleSpace{
 		origin:      Coords{0, 0, 0},
-		termination: Coords{size, size, size},
-		frameLen:    frameLen,
-		gravity:     gravity,
-		drag:        drag,
+		termination: Coords{opts.Size, opts.Size, opts.Size},
+		frameLen:    opts.FrameLen,
+		gravity:     opts.Gravity,
+		drag:        opts.Drag,
 	}
 }
 
@@ -139,24 +164,21 @@ func (s *SimpleSpace) increment(p Particle) {
 }
 
 // tick ...
-func (s *SimpleSpace) tick(ps Particles) {
+func (s *SimpleSpace) tick(ps Particles) []Coords {
 	d := ps.data()
+	cs := make([]Coords, len(d))
+
 	for k := range d {
 		s.increment(d[k])
+		cs[k] = d[k].Point()
 	}
+
+	return cs
 }
 
 // Run ...
-func (s *SimpleSpace) Run(ps Particles, frames int, dump bool) error {
+func (s *SimpleSpace) Run(ps Particles, frames int, cs chan []Coords) {
 	for i := 0; i < frames; i++ {
-		s.tick(ps)
-
-		if dump {
-			if err := ps.dump(i); err != nil {
-				return err
-			}
-		}
+		cs <- s.tick(ps)
 	}
-
-	return nil
 }

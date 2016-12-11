@@ -1,11 +1,6 @@
 package simpartsim
 
-import (
-	"fmt"
-	"math/rand"
-	"os"
-	"path/filepath"
-)
+import "math/rand"
 
 // Particle ...
 type Particle interface {
@@ -13,13 +8,11 @@ type Particle interface {
 	SetPoint(Coords)
 	Vector() Coords
 	SetVector(Coords)
-	String() string
 }
 
 // Particles ...
 type Particles interface {
 	data() []Particle
-	dump(int) error
 }
 
 // SimpleParticle ...
@@ -58,22 +51,15 @@ func (p *SimpleParticle) SetVector(cs Coords) {
 	p.vctr = cs
 }
 
-// String ...
-func (p *SimpleParticle) String() string {
-	return p.pt.String()
-}
-
 // SimpleParticles ...
 type SimpleParticles struct {
-	dir string
-	d   []Particle
+	d []Particle
 }
 
 // NewSimpleParticles ...
-func NewSimpleParticles(dir string, ct int, termination Coords) *SimpleParticles {
+func NewSimpleParticles(ct int, termination Coords) *SimpleParticles {
 	ps := &SimpleParticles{
-		dir: dir,
-		d:   make([]Particle, ct),
+		d: make([]Particle, ct),
 	}
 
 	for i := 0; i < ct; i++ {
@@ -86,25 +72,4 @@ func NewSimpleParticles(dir string, ct int, termination Coords) *SimpleParticles
 // data ...
 func (ps *SimpleParticles) data() []Particle {
 	return ps.d
-}
-
-// dump ...
-func (ps *SimpleParticles) dump(i int) error {
-	name := filepath.Join(ps.dir, fmt.Sprintf("particleData-%d.csv", i))
-	f, err := os.Create(name)
-	if err != nil {
-		return err
-	}
-
-	if _, err := f.WriteString("X Axis,Y Axis,Z Axis\n"); err != nil {
-		return err
-	}
-
-	for k := range ps.d {
-		if _, err := f.WriteString(ps.d[k].String() + "\n"); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
