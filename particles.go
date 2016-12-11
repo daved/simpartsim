@@ -26,7 +26,7 @@ func NewSimpleParticle(id, ct float64, termination Coords) *SimpleParticle {
 	t := termination
 
 	return &SimpleParticle{
-		pt:   Coords{id / ct * t.x, rand.Float64() * t.y, rand.Float64() * t.z},
+		pt:   Coords{id / ct * t.X, rand.Float64() * t.Y, rand.Float64() * t.Z},
 		vctr: Coords{rand.Float64() * 5, 0, 0},
 	}
 }

@@ -59,12 +59,12 @@ func (s *SimpleSpace) Termination() Coords {
 func (s *SimpleSpace) incrementDisplacement(p Particle, time, gravity float64) {
 	pt, v := p.Point(), p.Vector()
 
-	if pt.y == 0 && v.y == 0 {
+	if pt.Y == 0 && v.Y == 0 {
 		return
 	}
 
 	newV := v
-	newV.y = v.y - gravity*time
+	newV.Y = v.Y - gravity*time
 
 	p.SetVector(newV)
 }
@@ -73,24 +73,24 @@ func (s *SimpleSpace) incrementDisplacement(p Particle, time, gravity float64) {
 func (s *SimpleSpace) incrementDrag(p Particle, time, drag float64) {
 	pt, v := p.Point(), p.Vector()
 
-	if pt.y != 0 && v.y != 0 {
+	if pt.Y != 0 && v.Y != 0 {
 		return
 	}
 
 	newV := v
 
-	if math.Abs(v.x) < .05 {
-		newV.x = 0
+	if math.Abs(v.X) < .05 {
+		newV.X = 0
 	}
-	if math.Abs(v.z) < .05 {
-		newV.z = 0
+	if math.Abs(v.Z) < .05 {
+		newV.Z = 0
 	}
 
-	if newV.x != 0 {
-		newV.x = v.x * drag * time
+	if newV.X != 0 {
+		newV.X = v.X * drag * time
 	}
-	if newV.z != 0 {
-		newV.z = v.z * drag * time
+	if newV.Z != 0 {
+		newV.Z = v.Z * drag * time
 	}
 
 	p.SetVector(newV)
@@ -101,9 +101,9 @@ func (s *SimpleSpace) incrementLocation(p Particle, time float64) {
 	pt, v := p.Point(), p.Vector()
 	newPt := pt
 
-	newPt.x = pt.x + v.x*time
-	newPt.y = pt.y + v.y*time
-	newPt.z = pt.z + v.z*time
+	newPt.X = pt.X + v.X*time
+	newPt.Y = pt.Y + v.Y*time
+	newPt.Z = pt.Z + v.Z*time
 
 	p.SetPoint(newPt)
 }
@@ -119,36 +119,36 @@ func (s *SimpleSpace) processCollisions(p Particle, origin, termination Coords) 
 	pt, v := p.Point(), p.Vector()
 	newPt, newV := pt, v
 
-	if pt.x <= origin.x {
-		newPt.x = s.reflect(pt.x, origin.x)
-		newV.x = v.x * -.7
+	if pt.X <= origin.X {
+		newPt.X = s.reflect(pt.X, origin.X)
+		newV.X = v.X * -.7
 	}
-	if pt.x >= termination.x {
-		newPt.x = s.reflect(pt.x, termination.x)
-		newV.x = v.x * -.7
+	if pt.X >= termination.X {
+		newPt.X = s.reflect(pt.X, termination.X)
+		newV.X = v.X * -.7
 	}
 
-	if pt.y <= origin.y {
-		newPt.y = s.reflect(pt.y, origin.y)
-		newV.y = v.y * -.5
+	if pt.Y <= origin.Y {
+		newPt.Y = s.reflect(pt.Y, origin.Y)
+		newV.Y = v.Y * -.5
 
-		if newPt.y < .4 && newV.y-newPt.y < 1.2 {
-			newPt.y = 0
-			newV.y = 0
+		if newPt.Y < .4 && newV.Y-newPt.Y < 1.2 {
+			newPt.Y = 0
+			newV.Y = 0
 		}
 	}
-	if pt.y >= termination.y {
-		newPt.y = s.reflect(pt.y, termination.y)
-		newV.y = v.y * -.9
+	if pt.Y >= termination.Y {
+		newPt.Y = s.reflect(pt.Y, termination.Y)
+		newV.Y = v.Y * -.9
 	}
 
-	if pt.z <= origin.z {
-		newPt.z = s.reflect(pt.z, origin.z)
-		newV.z = v.z * -.7
+	if pt.Z <= origin.Z {
+		newPt.Z = s.reflect(pt.Z, origin.Z)
+		newV.Z = v.Z * -.7
 	}
-	if pt.z >= termination.z {
-		newPt.z = s.reflect(pt.z, termination.z)
-		newV.z = v.z * -.7
+	if pt.Z >= termination.Z {
+		newPt.Z = s.reflect(pt.Z, termination.Z)
+		newV.Z = v.Z * -.7
 	}
 
 	p.SetPoint(newPt)
