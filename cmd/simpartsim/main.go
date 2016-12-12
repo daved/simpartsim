@@ -22,7 +22,7 @@ func main() {
 		Drag:     9.0,
 	}
 
-	flag.StringVar(&dir, "dir", dir, "output dir (stdout if blank)")
+	flag.StringVar(&dir, "dir", dir, "output dir (default 'print to stdout')")
 	flag.IntVar(&parts, "parts", parts, "particle count")
 	flag.IntVar(&frames, "frames", frames, "frame count")
 	flag.Parse()
