@@ -4,7 +4,7 @@ import "math"
 
 // Space ...
 type Space interface {
-	Run(ps Particles, frames int, dump bool)
+	Run(ps Particles, frames int, cs chan []Coords)
 	Termination() Coords
 }
 
