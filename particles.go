@@ -13,6 +13,7 @@ type Particle interface {
 // Particles ...
 type Particles interface {
 	data() []Particle
+	Reset()
 }
 
 // SimpleParticle ...
@@ -54,16 +55,21 @@ func (p *SimpleParticle) SetVector(cs Coords) {
 // SimpleParticles ...
 type SimpleParticles struct {
 	d []Particle
+	u []Particle
 }
 
 // NewSimpleParticles ...
 func NewSimpleParticles(ct int, termination Coords) *SimpleParticles {
 	ps := &SimpleParticles{
 		d: make([]Particle, ct),
+		u: make([]Particle, ct),
 	}
 
 	for i := 0; i < ct; i++ {
-		ps.d[i] = NewSimpleParticle(float64(i), float64(ct), termination)
+		p := NewSimpleParticle(float64(i), float64(ct), termination)
+		ps.d[i] = p
+		pc := *p
+		ps.u[i] = &pc
 	}
 
 	return ps
@@ -72,4 +78,12 @@ func NewSimpleParticles(ct int, termination Coords) *SimpleParticles {
 // data ...
 func (ps *SimpleParticles) data() []Particle {
 	return ps.d
+}
+
+// Reset ...
+func (ps *SimpleParticles) Reset() {
+	for k := range ps.u {
+		ps.d[k].SetPoint(ps.u[k].Point())
+		ps.d[k].SetVector(ps.u[k].Vector())
+	}
 }
